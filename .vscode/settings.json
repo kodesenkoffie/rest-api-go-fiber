@@ -1,0 +1,15 @@
+{
+  "editor.defaultFormatter": "golang.go",
+  "editor.formatOnSave": true,
+  "editor.tabSize": 2,
+  "files.autoSave": "onFocusChange",
+   "gopls": {
+    "ui.semanticTokens": true
+    },
+	"go.lintTool":"golangci-lint",
+    "go.lintFlags": ["--fast"],
+	"go.lintOnSave": "package",
+	"go.testFlags": ["-failfast","-v"],
+    "go.toolsManagement.autoUpdate": true,
+    "go.useLanguageServer": true
+}

@@ -1,0 +1,418 @@
+#!/usr/bin/env bash
+
+create_directories_if_not_exist() {
+  for DIRECTORY in "$@"; do
+    if [ -z "$DIRECTORY" ]; then
+      echo "Input is not a string."
+      return 1
+    fi
+
+    if [ ! -d "$DIRECTORY" ]; then
+      echo "$DIRECTORY does not exist."
+      echo "Creating $DIRECTORY."
+
+      mkdir -p "$DIRECTORY"
+    else
+      echo "$DIRECTORY already exists."
+    fi
+  done
+}
+
+create_file_with_content() {
+  FILENAME="$1"
+  CONTENT="$2"
+
+  echo "$CONTENT" > "$FILENAME"
+  echo "Created $FILENAME with content: $CONTENT"
+}
+
+# Top Level Directories
+root_dir_folders=(".vscode" ".logs" "api" "cmd" "docker-scripts" "scripts" "internal" "pkg")
+create_directories_if_not_exist "${root_dir_folders[@]}"
+
+cd api
+
+api_dir_folders=("auth" "users" "user-roles" "tenants")
+create_directories_if_not_exist "${api_dir_folders[@]}"
+
+cd auth
+
+# Creating Auth Files
+files=(
+  "auth-controller.go|package auth"
+  "auth-service.go|package auth"
+  "auth-validation.go|package auth"
+)
+
+for pair in "${files[@]}"; do
+  filename="${pair%%|*}"  # Extract filename
+  package="${pair#*|}"    # Extract package name
+  create_file_with_content "$filename" "$package"
+done
+
+cd ..
+
+cd users
+# Creating User Files
+files=(
+  "users-controller.go|package users"
+  "users-service.go|package users"
+  "users-validation.go|package users"
+)
+
+for pair in "${files[@]}"; do
+  filename="${pair%%|*}"  # Extract filename
+  package="${pair#*|}"    # Extract package name
+  create_file_with_content "$filename" "$package"
+done
+
+cd ..
+
+cd user-roles
+# Creating User Role Files
+files=(
+  "user-roles-controller.go|package userroles"
+  "user-roles-service.go|package userroles"
+  "user-roles-validation.go|package userroles"
+)
+
+for pair in "${files[@]}"; do
+  filename="${pair%%|*}"  # Extract filename
+  package="${pair#*|}"    # Extract package name
+  create_file_with_content "$filename" "$package"
+done
+
+cd ..
+
+cd tenants
+# Creating Tenants Files
+files=(
+  "tenants-controller.go|package tenants"
+  "tenants-service.go|package tenants"
+  "tenants-validation.go|package tenants"
+)
+
+for pair in "${files[@]}"; do
+  filename="${pair%%|*}"  # Extract filename
+  package="${pair#*|}"    # Extract package name
+  create_file_with_content "$filename" "$package"
+done
+
+cd ..
+cd ..
+
+cd cmd
+
+if [ ! -d "v1" ]; then
+  echo "v1 does not exist."
+  echo "Creating v1."
+
+  mkdir -p "v1"
+else
+  echo "v1 already exists."
+fi
+
+cd v1
+
+if [ ! -d "routes" ]; then
+  echo "routes does not exist."
+  echo "Creating routes."
+
+  mkdir -p "routes"
+else
+  echo "routes already exists."
+fi
+
+cd routes
+
+# Creating Route Files
+files=(
+  "routes.go|package routes"
+)
+
+for pair in "${files[@]}"; do
+  filename="${pair%%|*}"  # Extract filename
+  package="${pair#*|}"    # Extract package name
+  create_file_with_content "$filename" "$package"
+done
+
+cd ..
+
+# Creating main.go
+files=(
+  "main.go|package main
+
+func main() {}"
+)
+
+for pair in "${files[@]}"; do
+  filename="${pair%%|*}"  # Extract filename
+  package="${pair#*|}"    # Extract package name
+  create_file_with_content "$filename" "$package"
+done
+
+cd ..
+cd ..
+
+cd .vscode
+
+# Creating main.go
+files=(
+  "settings.json|{
+  \"editor.defaultFormatter\": \"golang.go\",
+  \"editor.formatOnSave\": true,
+  \"editor.tabSize\": 2,
+  \"files.autoSave\": \"onFocusChange\",
+   \"gopls\": {
+    \"ui.semanticTokens\": true
+    },
+	\"go.lintTool\":\"golangci-lint\",
+    \"go.lintFlags\": [\"--fast\"],
+	\"go.lintOnSave\": \"package\",
+	\"go.testFlags\": [\"-failfast\",\"-v\"],
+    \"go.toolsManagement.autoUpdate\": true,
+    \"go.useLanguageServer\": true
+}"
+)
+
+for pair in "${files[@]}"; do
+  filename="${pair%%|*}"  # Extract filename
+  package="${pair#*|}"    # Extract package name
+  create_file_with_content "$filename" "$package"
+done
+
+cd ..
+
+files=(
+  ".gitignore|# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary, built with `go tests -c`
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+
+# Dependency directories (remove the comment below to include it)
+# vendor/
+
+# Go workspace file
+go.work
+
+# Tools
+.idea
+.idea/*
+
+.terraform
+*.tfstate
+*.tfstate.*backup
+
+.go/
+.go-cache/
+
+# Local History for Visual Studio Code
+.history/
+
+# Built Visual Studio Code Extensions
+*.vsix
+
+*.log*
+
+.DS_Store
+
+profile.out
+coverage.txt
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+# Local History for Visual Studio Code
+.history/
+
+# Built Visual Studio Code Extensions
+*.vsix
+
+out/
+**/.vagrant/
+.idea/
+local/data/
+portainer-data/
+.husky/pre-commit
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# Diagnostic reports (https://nodejs.org/api/report.html)
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Directory for instrumented libs generated by jscoverage/JSCover
+lib-cov
+
+# Coverage directory used by tools like istanbul
+coverage
+*.lcov
+
+# nyc test coverage
+.nyc_output
+
+# Grunt intermediate storage (https://gruntjs.com/creating-plugins#storing-task-files)
+.grunt
+
+# Bower dependency directory (https://bower.io/)
+bower_components
+
+# node-waf configuration
+.lock-wscript
+
+# Compiled binary addons (https://nodejs.org/api/addons.html)
+build/Release
+
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# Snowpack dependency directory (https://snowpack.dev/)
+web_modules/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Optional stylelint cache
+.stylelintcache
+
+# Microbundle cache
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# parcel-bundler cache (https://parceljs.org/)
+.cache
+.parcel-cache
+
+# Next.js build output
+.next
+out
+
+# Nuxt.js build / generate output
+.nuxt
+dist
+
+# Gatsby files
+.cache/
+# Comment in the public line in if your project uses Gatsby and not Next.js
+# https://nextjs.org/blog/next-9-1#public-directory-support
+# public
+
+# vuepress build output
+.vuepress/dist
+
+# vuepress v2.x temp and cache directory
+.temp
+.cache
+
+# Docusaurus cache and generated files
+.docusaurus
+
+# Serverless directories
+.serverless/
+
+# FuseBox cache
+.fusebox/
+
+# DynamoDB Local files
+.dynamodb/
+
+# TernJS port file
+.tern-port
+
+# Stores VSCode versions used for testing VSCode extensions
+.vscode-test
+
+# yarn v2
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*"
+
+"README.md|# Project Name
+
+## Notes"
+
+".env|PORT="8800"
+
+# DB Connection
+MYSQL_HOST="localhost"
+MYSQL_USER="root"
+MYSQL_PASSWORD="password"
+MYSQL_DB_NAME="fiber-server"
+MYSQL_PORT=3306
+MYSQL_SSL_MODE="disable"
+
+MONGO_HOST="localhost"
+MONGO_USER="mongodb"
+MONGO_PASSWORD="password"
+MONGO_DB_NAME="fiber-server"
+MONGO_PORT=27017
+MONGO_SSL_MODE="disable"
+
+PG_HOST="localhost"
+PG_USER="postgres"
+PG_PASSWORD="password"
+PG_DB_NAME="fiber-server"
+PG_PORT=5432
+PG_SSL_MODE="disable"
+
+# API Prefix
+API_PREFIX="/api/v1""
+)
+
+for pair in "${files[@]}"; do
+  filename="${pair%%|*}"  # Extract filename
+  package="${pair#*|}"    # Extract package name
+  create_file_with_content "$filename" "$package"
+done
+
+go mod init github.com/anku559/fiber-server
+go get github.com/gofiber/fiber/v2
+
+pnpm init
+pnpm add -D nodemon
+
+# echo $PWD
+# nodemon --watch './**/*.go' --signal SIGTERM --exec 'go' run $PWD/cmd/v1/main.go
