@@ -1,0 +1,35 @@
+@HOST = localhost:8800
+@API_PREFIX = api/v1
+@BASE_URL = http://{{HOST}}/{{API_PREFIX}}
+
+@ENDPOINT = tenants
+
+### Create Resource
+POST {{BASE_URL}}/{{ENDPOINT}} HTTP/1.1
+Content-Type: application/json`
+
+
+{
+  "name": "name",
+  "slug": "slug"
+}
+
+
+### Fetch Resources
+GET {{BASE_URL}}/{{ENDPOINT}}/12121 HTTP/1.1
+
+
+### Fetch Resource by ID
+GET {{BASE_URL}}/{{ENDPOINT}}/12121 HTTP/1.1
+
+
+### Update Resource
+PUT {{BASE_URL}}/{{ENDPOINT}}/12121 HTTP/1.1
+
+
+### Partial Update Resource
+PATCH {{BASE_URL}}/{{ENDPOINT}}/12121 HTTP/1.1
+
+
+### Delete Resource
+DELETE {{BASE_URL}}/{{ENDPOINT}}/12121 HTTP/1.1

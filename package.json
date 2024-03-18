@@ -1,0 +1,15 @@
+{
+  "name": "rest-api-go-fiber",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon --watch './**/*.go' --signal SIGTERM --exec 'go' run $PWD/cmd/v1/main.go"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
+}
