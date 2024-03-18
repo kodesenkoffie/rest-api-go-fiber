@@ -29,12 +29,25 @@ func CreateBlog(c *fiber.Ctx) error {
 
 func FetchBlogs(c *fiber.Ctx) error {
 
+	response := fiber.Map{
+		"code":      200,
+		"info":      "Ok",
+		"status":    true,
+		"timestamp": time.Now(),
+	}
+
 	id := c.Params("id")
 
 	if id != "" {
-		return c.SendString(id)
+		data := fetchBlogById(id)
+		response["message"] = "Blog fetched successfully."
+		response["data"] = data
+		return c.Status(fiber.StatusOK).JSON(response)
 	} else {
-		return c.SendString("Id not passed")
+		data := fetchAllBlogs()
+		response["message"] = "Blogs fetched successfully."
+		response["data"] = data
+		return c.Status(fiber.StatusOK).JSON(response)
 	}
 
 }

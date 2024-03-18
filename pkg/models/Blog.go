@@ -8,7 +8,7 @@ import (
 )
 
 type Blog struct {
-	Id uuid.UUID `gorm:"primary_key;type:uuid;default:uuid_generate_v4()"`
+	Id uuid.UUID `json:"id" gorm:"primaryKey;type:uuid;default:uuid_generate_v4()"`
 
 	Title string `json:"title" gorm:"not null;column:title"`
 	Post  string `json:"post" gorm:"not null;column:post"`
