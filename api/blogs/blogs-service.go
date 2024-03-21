@@ -5,8 +5,11 @@ import (
 	"github/kodesenkoffie/server/pkg/models"
 )
 
-func createBlog() bool {
-	return false
+func createBlog(blogData models.Blog) (models.Blog, error) {
+	if err := db.DB.Create(&blogData).Error; err != nil {
+		return models.Blog{}, err
+	}
+	return blogData, nil
 }
 
 func fetchAllBlogs() []models.Blog {

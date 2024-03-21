@@ -1,30 +1,30 @@
 package blogs
 
 import (
+	"github/kodesenkoffie/server/pkg/crs"
+	"github/kodesenkoffie/server/pkg/models"
+	"log"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 func CreateBlog(c *fiber.Ctx) error {
+	blog := new(models.Blog)
 
-	response := fiber.Map{
-		"code":      201,
-		"info":      "Created",
-		"message":   "Blog created successfully.",
-		"status":    true,
-		"timestamp": time.Now(),
+	if err := c.BodyParser(&blog); err != nil {
+		badRequest := crs.BadRequest("Failed to create blog")
+		return c.Status(badRequest.Code).JSON(badRequest)
 	}
 
-	// blog := new(models.Blog)
-
-	// if err := c.BodyParser(&blog); err != nil {
-	// 	return err
-	// }
-
-	// fmt.Println(blog)
-
-	return c.Status(fiber.StatusCreated).JSON(response)
+	if blogData, err := createBlog(*blog); err != nil {
+		log.Println("Failed to create blog:", err)
+		internalServer := crs.InternalServerError("Failed to create blog")
+		return c.Status(internalServer.Code).JSON(internalServer)
+	} else {
+		created := crs.Created("Blog created successfully.", blogData)
+		return c.Status(created.Code).JSON(created)
+	}
 }
 
 func FetchBlogs(c *fiber.Ctx) error {

@@ -1,19 +1,66 @@
-package response
+package crs
 
-// import (
-// 	"net/http"
-// 	"time"
+import (
+	"net/http"
+	"time"
+)
 
-// 	"github.com/gin-gonic/gin"
-// )
+type Response struct {
+	Code      int          `json:"code"`
+	Data      *interface{} `json:"data,omitempty"` // Use pointer to allow nil value
+	Info      string       `json:"info"`
+	Message   string       `json:"message"`
+	Status    bool         `json:"status"`
+	Timestamp time.Time    `json:"timestamp"`
+}
 
-// type Response struct {
-// 	Code      int       `json:"code"`
-// 	Info      string    `json:"info"`
-// 	Status    bool      `json:"status"`
-// 	Timestamp time.Time `json:"timestamp"`
-// 	Message   string    `json:"message"`
-// }
+func Created(message string, data ...interface{}) *Response {
+	response := &Response{
+		Code:      http.StatusCreated,
+		Info:      "CREATED",
+		Status:    true,
+		Timestamp: time.Now(),
+		Message:   message,
+	}
+
+	if len(data) > 0 {
+		response.Data = &data[0] // Set data field only if data argument is provided
+	}
+
+	return response
+}
+
+func InternalServerError(message string, data ...interface{}) *Response {
+	response := &Response{
+		Code:      http.StatusInternalServerError,
+		Info:      "INTERNAL_SERVER_ERROR",
+		Status:    false,
+		Timestamp: time.Now(),
+		Message:   message,
+	}
+
+	if len(data) > 0 {
+		response.Data = &data[0]
+	}
+
+	return response
+}
+
+func BadRequest(message string, data ...interface{}) *Response {
+	response := &Response{
+		Code:      http.StatusBadRequest,
+		Info:      "BAD_REQUEST",
+		Status:    false,
+		Timestamp: time.Now(),
+		Message:   message,
+	}
+
+	if len(data) > 0 {
+		response.Data = &data[0]
+	}
+
+	return response
+}
 
 // func newResponse(code int, status bool, message, info string) *Response {
 // 	return &Response{
